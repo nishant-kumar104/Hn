@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy New Year </title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    html, body {
+        margin:0; padding:0;
+        width:100%; height:100%;
+        overflow-x:hidden;
+        background:white;
+        font-family: "Poppins", sans-serif;
+    }
+
+    #pink-area {
+        position:absolute;
+        top:0; left:0;
+        width:100%; height:100%;
+        pointer-events:none;
+        z-index:2;
+    }
+
+    .pink-heart {
+        position:absolute;
+        width:18px;
+        height:18px;
+        opacity:0;
+        transition:opacity .15s;
+    }
+
+    .blue-heart {
+        position:absolute;
+        width:22px;
+        height:22px;
+        opacity:0;
+        transition:opacity .2s;
+        z-index:99;
+    }
+
+    #gif-top, #gif-bottom {
+        width:100%;
+        text-align:center;
+        position:relative;
+        z-index:100;
+    }
+
+    #gif-top img, #gif-bottom img {
+        width:85%;
+        max-width:480px;
+    }
+
+    #message-box {
+        position:relative;
+        margin: 10px auto 0 auto;
+        width:80%;
+        background:#1D6BFF; /* blue rectangle */
+        color:white;
+        text-align:center;
+        font-size:19px;
+        padding:18px;
+        z-index:120;
+        opacity:0;
+        transition: opacity 2.5s ease-in-out;
+    }
+</style>
+</head>
+
+<body>
+
+<div id="pink-area"></div>
+
+<div id="gif-top">
+    <img src="https://happynewyeargif.com/mensaje/happy-new-year-my-love-2026-gif.gif">
+</div>
+
+<div id="message-box">
+    this year 2025 was full of struggles for me ,<br>
+    but ur presence made it the most important and beautiful year of my life .<br>
+    Your presence is so so so special for me ....<br>
+    May god bless me to manifest at least 60 more new years with you ..<br><br>
+    I love you so much  ...<br>
+    <b>Happy new year sweetheart </b>
+</div>
+
+<div id="gif-bottom">
+    <img src="https://happynewyeargif.com/mensaje/happy-new-year-my-love-2026-gif.gif">
+</div>
+
+<script>
+let w = window.innerWidth;
+let h = window.innerHeight;
+let container = document.getElementById("pink-area");
+
+// hearts URLs
+let pinkHeartImg = "https://cdn-icons-png.flaticon.com/512/833/833472.png";
+let blueHeartImg = "https://cdn-icons-png.flaticon.com/512/2107/2107952.png";
+
+let total = 2000;
+let count = 0;
+
+// Fill screen with red/pink hearts
+let interval = setInterval(()=>{
+    let img = document.createElement("img");
+    img.src = pinkHeartImg;
+    img.className = "pink-heart";
+    img.style.left = Math.random() * w + "px";
+    img.style.top  = Math.random() * h + "px";
+    container.appendChild(img);
+    setTimeout(()=>{ img.style.opacity = 1; },10);
+    count++;
+    if(count >= total){
+        clearInterval(interval);
+        drawBorder();
+    }
+}, 2);
+
+// Draw blue border hearts
+function drawBorder(){
+    let arr = [];
+    let step = 22;
+
+    for(let x=0; x<w; x+=step) arr.push([x, 0]);
+    for(let y=0; y<h; y+=step) arr.push([w-step, y]);
+    for(let x=0; x<w; x+=step) arr.push([x, h-step]);
+    for(let y=0; y<h; y+=step) arr.push([0, y]);
+
+    let i=0;
+    let t = setInterval(()=>{
+        let pos = arr[i];
+        let img = document.createElement("img");
+        img.src = blueHeartImg;
+        img.className = "blue-heart";
+        img.style.left = pos[0] + "px";
+        img.style.top  = pos[1] + "px";
+        container.appendChild(img);
+        setTimeout(()=>{ img.style.opacity = 1; },30);
+        i++;
+        if(i >= arr.length){
+            clearInterval(t);
+            showMessage();
+        }
+    }, 10);
+}
+
+function showMessage(){
+    document.getElementById("message-box").style.opacity = 1;
+}
+</script>
+
+</body>
+</html>
