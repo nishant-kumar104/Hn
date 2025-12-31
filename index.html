@@ -9,12 +9,12 @@
     html, body {
         margin:0; padding:0;
         width:100%; height:100%;
-        overflow-x:hidden;
+        overflow:hidden;
         background:white;
         font-family: "Poppins", sans-serif;
     }
 
-    #pink-area {
+    #heart-container {
         position:absolute;
         top:0; left:0;
         width:100%; height:100%;
@@ -22,20 +22,18 @@
         z-index:2;
     }
 
-    .pink-heart {
+    .pink-heart, .blue-heart {
         position:absolute;
-        width:18px;
-        height:18px;
         opacity:0;
-        transition:opacity .15s;
+        transition:opacity .2s;
+    }
+
+    .pink-heart {
+        width:18px; height:18px;
     }
 
     .blue-heart {
-        position:absolute;
-        width:22px;
-        height:22px;
-        opacity:0;
-        transition:opacity .2s;
+        width:22px; height:22px;
         z-index:99;
     }
 
@@ -44,6 +42,7 @@
         text-align:center;
         position:relative;
         z-index:100;
+        margin:10px 0;
     }
 
     #gif-top img, #gif-bottom img {
@@ -53,28 +52,30 @@
 
     #message-box {
         position:relative;
-        margin: 10px auto 0 auto;
+        margin:20px auto;
         width:80%;
-        background:#1D6BFF; /* blue rectangle */
+        background:#1D6BFF; /* same blue as border hearts */
         color:white;
         text-align:center;
-        font-size:19px;
-        padding:18px;
+        font-size:18px;
+        padding:16px;
         z-index:120;
         opacity:0;
-        transition: opacity 2.5s ease-in-out;
+        transition:opacity 2.5s ease-in-out;
     }
 </style>
 </head>
 
 <body>
 
-<div id="pink-area"></div>
+<div id="heart-container"></div>
 
+<!-- Top GIF -->
 <div id="gif-top">
     <img src="https://happynewyeargif.com/mensaje/happy-new-year-my-love-2026-gif.gif">
 </div>
 
+<!-- Message Box -->
 <div id="message-box">
     this year 2025 was full of struggles for me ,<br>
     but ur presence made it the most important and beautiful year of my life .<br>
@@ -84,6 +85,7 @@
     <b>Happy new year sweetheart </b>
 </div>
 
+<!-- Bottom GIF (appears after message animation) -->
 <div id="gif-bottom">
     <img src="https://happynewyeargif.com/mensaje/happy-new-year-my-love-2026-gif.gif">
 </div>
@@ -91,61 +93,64 @@
 <script>
 let w = window.innerWidth;
 let h = window.innerHeight;
-let container = document.getElementById("pink-area");
+let container = document.getElementById("heart-container");
 
-// hearts URLs
+// Heart images
 let pinkHeartImg = "https://cdn-icons-png.flaticon.com/512/833/833472.png";
 let blueHeartImg = "https://cdn-icons-png.flaticon.com/512/2107/2107952.png";
 
-let total = 2000;
+let totalPink = 2000;
 let count = 0;
 
-// Fill screen with red/pink hearts
-let interval = setInterval(()=>{
+// STEP 1: Fill page with pink hearts (inside only)
+let pinkInterval = setInterval(()=>{
     let img = document.createElement("img");
     img.src = pinkHeartImg;
     img.className = "pink-heart";
-    img.style.left = Math.random() * w + "px";
-    img.style.top  = Math.random() * h + "px";
+    img.style.left = Math.random() * (w - 18) + "px";
+    img.style.top  = Math.random() * (h - 18) + "px";
     container.appendChild(img);
-    setTimeout(()=>{ img.style.opacity = 1; },10);
+    setTimeout(()=>{ img.style.opacity = 1; }, 10);
     count++;
-    if(count >= total){
-        clearInterval(interval);
+    if(count >= totalPink){
+        clearInterval(pinkInterval);
         drawBorder();
     }
 }, 2);
 
-// Draw blue border hearts
+// STEP 2: Draw blue border hearts
 function drawBorder(){
-    let arr = [];
+    let positions = [];
     let step = 22;
-
-    for(let x=0; x<w; x+=step) arr.push([x, 0]);
-    for(let y=0; y<h; y+=step) arr.push([w-step, y]);
-    for(let x=0; x<w; x+=step) arr.push([x, h-step]);
-    for(let y=0; y<h; y+=step) arr.push([0, y]);
+    for(let x=0;x<w;x+=step) positions.push([x,0]);
+    for(let y=0;y<h;y+=step) positions.push([w-step,y]);
+    for(let x=0;x<w;x+=step) positions.push([x,h-step]);
+    for(let y=0;y<h;y+=step) positions.push([0,y]);
 
     let i=0;
-    let t = setInterval(()=>{
-        let pos = arr[i];
+    let borderInterval = setInterval(()=>{
+        let pos = positions[i];
         let img = document.createElement("img");
         img.src = blueHeartImg;
         img.className = "blue-heart";
         img.style.left = pos[0] + "px";
         img.style.top  = pos[1] + "px";
         container.appendChild(img);
-        setTimeout(()=>{ img.style.opacity = 1; },30);
+        setTimeout(()=>{ img.style.opacity = 1; }, 30);
         i++;
-        if(i >= arr.length){
-            clearInterval(t);
+        if(i >= positions.length){
+            clearInterval(borderInterval);
             showMessage();
         }
     }, 10);
 }
 
+// STEP 3: Show message & bottom GIF
 function showMessage(){
-    document.getElementById("message-box").style.opacity = 1;
+    let msg = document.getElementById("message-box");
+    msg.style.opacity = 1;
+    // Show bottom GIF after message appears
+    document.getElementById("gif-bottom").style.opacity = 1;
 }
 </script>
 
